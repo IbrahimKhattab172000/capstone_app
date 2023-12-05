@@ -1,7 +1,6 @@
 import 'package:capstone_app/constants/constants.dart';
 import 'package:capstone_app/models/readings.dart';
 import 'package:capstone_app/services/firebase_service.dart';
-import 'package:capstone_app/widgets/add_test_button.dart';
 import 'package:capstone_app/widgets/charts.dart';
 import 'package:capstone_app/widgets/countdown_clock.dart';
 import 'package:flutter/material.dart';
@@ -54,12 +53,8 @@ class _CheckState extends State<Check> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AddTestButton(
-              onTap: () {},
-            ),
-            const SizedBox(height: 50.0),
             Text(
-              'Next test',
+              'Next test should be in',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
