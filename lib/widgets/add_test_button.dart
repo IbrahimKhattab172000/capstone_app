@@ -1,9 +1,9 @@
 import 'package:capstone_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 
-class AddTestButton extends StatelessWidget {
+class FetchTestButton extends StatelessWidget {
   final VoidCallback onTap;
-  const AddTestButton({super.key, required this.onTap});
+  const FetchTestButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +20,12 @@ class AddTestButton extends StatelessWidget {
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(
                     20.0,
-                  ), // Adjust the radius as needed
-                  side: const BorderSide(color: Colors.white), // Border color
+                  ),
+                  side: const BorderSide(color: Colors.white),
                 ),
               ),
             ),
-            child: const Text('Add test reading'),
+            child: const Text('Fetch test results'),
           ),
         ),
       ],
