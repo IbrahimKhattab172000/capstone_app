@@ -1,9 +1,12 @@
 import 'package:capstone_app/constants/constants.dart';
-import 'package:capstone_app/screens/ai_chat_screen.dart';
+import 'package:capstone_app/providers/chats_provider.dart';
+import 'package:capstone_app/providers/models_provider.dart';
+import 'package:capstone_app/screens/chat_screen.dart';
 import 'package:capstone_app/screens/check_screen.dart';
 import 'package:capstone_app/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -20,13 +23,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const MyHomePage(),
-      theme: ThemeData(
-        scaffoldBackgroundColor: scaffoldBackgroundColor,
-        fontFamily: 'TitilliumWeb',
-        appBarTheme: AppBarTheme(
-          color: appBarColor,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ModelsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ChatProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        home: const MyHomePage(),
+        theme: ThemeData(
+          scaffoldBackgroundColor: scaffoldBackgroundColor,
+          fontFamily: 'TitilliumWeb',
+          appBarTheme: AppBarTheme(
+            color: appBarColor,
+          ),
         ),
       ),
     );
@@ -46,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _screens = [
     const Home(),
     Check(),
-    const AiChat(),
+    const ChatScreen(),
   ];
 
   @override
