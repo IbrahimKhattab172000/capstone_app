@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:capstone_app/constants/constants.dart';
 import 'package:capstone_app/providers/chats_provider.dart';
 import 'package:capstone_app/providers/models_provider.dart';
@@ -58,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _screens = [
     const Home(),
-    Check(),
+    const Check(),
     const ChatScreen(),
   ];
 

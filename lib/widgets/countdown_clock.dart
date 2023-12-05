@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 
@@ -26,7 +28,7 @@ class CountDownWidget extends StatelessWidget {
             // Countdown timer
             CountdownTimer(
               endTime: calculateEndTime(),
-              textStyle: TextStyle(fontSize: 20, color: Colors.blue),
+              textStyle: const TextStyle(fontSize: 20, color: Colors.blue),
               onEnd: () {
                 // Add any action you want to perform when the countdown ends
                 print('Countdown ended!');

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print
+
 import 'package:capstone_app/constants/constants.dart';
 import 'package:capstone_app/models/readings.dart';
 import 'package:capstone_app/services/firebase_service.dart';

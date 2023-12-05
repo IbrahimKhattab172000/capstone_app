@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:capstone_app/constants/constants.dart';
 import 'package:capstone_app/models/readings.dart';
 import 'package:capstone_app/services/firebase_service.dart';
@@ -6,7 +8,7 @@ import 'package:capstone_app/widgets/countdown_clock.dart';
 import 'package:flutter/material.dart';
 
 class Check extends StatefulWidget {
-  Check({super.key});
+  const Check({super.key});
 
   @override
   State<Check> createState() => _CheckState();
