@@ -1,9 +1,24 @@
 import 'package:capstone_app/constants/constants.dart';
+import 'package:capstone_app/models/readings.dart';
+import 'package:capstone_app/services/firebase_service.dart';
 import 'package:capstone_app/widgets/add_test_button.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  List<Readings> readings = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +29,10 @@ class Home extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AddTestButton(
-              onTap: () {},
+            FetchTestButton(
+              onTap: () {
+                fetchData();
+              },
             ),
             const SizedBox(height: 50.0),
             Table(
@@ -27,30 +44,55 @@ class Home extends StatelessWidget {
                     _buildHeaderCell('Heart Rate'),
                   ],
                 ),
-                TableRow(
-                  children: [
-                    _buildDataCell('120'),
-                    _buildDataCell('100'),
-                  ],
-                ),
-                TableRow(
-                  children: [
-                    _buildDataCell('130'),
-                    _buildDataCell('120'),
-                  ],
-                ),
+                for (var i = 0; i < 3; i++)
+                  TableRow(
+                    children: [
+                      _buildDataCell(
+                        readings.length > i
+                            ? readings[readings.length - 1 - i]
+                                .flowRate
+                                .toString()
+                            : '',
+                        highlight: i == 0,
+                      ),
+                      _buildDataCell(
+                        readings.length > i
+                            ? readings[readings.length - 1 - i]
+                                .heartRate
+                                .toString()
+                            : '',
+                        highlight: i == 0,
+                      ),
+                    ],
+                  ),
               ],
             ),
             const SizedBox(height: 20.0),
-            _buildSection('Instructions',
-                "Monitor regularly and heck your heart rate and flow rate regularly\n \nResting heart rate and understand your baseline resting heart rate\n\nConsult a professional if you notice consistent irregularities or have concerns about your heart rate or flow rate, consult a healthcare professional for personalized advice"),
+            _buildSection(
+              'Instructions',
+              "Monitor regularly and check your heart rate and flow rate regularly\n \nResting heart rate and understand your baseline resting heart rate\n\nConsult a professional if you notice consistent irregularities or have concerns about your heart rate or flow rate, consult a healthcare professional for personalized advice",
+            ),
             const SizedBox(height: 10.0),
-            _buildSection('Suggestions',
-                "Stay hydrated and maintain good hydration levels to support healthy blood flow\n \nExercise regularly and engage in regular physical activity for a healthy heart."),
+            _buildSection(
+              'Suggestions',
+              "Stay hydrated and maintain good hydration levels to support healthy blood flow\n \nExercise regularly and engage in regular physical activity for a healthy heart.",
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> fetchData() async {
+    try {
+      List<Readings> fetchedReadings = await FirebaseService().fetchData();
+      setState(() {
+        readings = fetchedReadings;
+      });
+    } catch (e) {
+      // Handle error
+      print('Error fetching data: $e');
+    }
   }
 
   Widget _buildHeaderCell(String label) {
@@ -65,20 +107,27 @@ class Home extends StatelessWidget {
     );
   }
 
-  Widget _buildDataCell(String data) {
+  Widget _buildDataCell(String data, {bool highlight = false}) {
     return Container(
       height: 60,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white),
+        color: highlight ? Colors.yellow : null,
       ),
-      child: Text(data, style: TextStyle(color: white)),
+      child: Text(
+        data,
+        style: TextStyle(
+          color: highlight ? Colors.black : white,
+          fontWeight: highlight ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
     );
   }
 
   Widget _buildSection(String title, String content) {
     return Container(
-      height: 180, // Reduced height
+      height: 180,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       padding: const EdgeInsets.all(16.0),
       child: Column(
