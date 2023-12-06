@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -62,9 +64,9 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
         if (_isTyping) ...[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: const SpinKitThreeBounce(
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: SpinKitThreeBounce(
               color: Colors.white,
               size: 18,
             ),
