@@ -88,8 +88,12 @@ class _HomeState extends State<Home> {
   Future<void> fetchData() async {
     try {
       List<Readings> fetchedReadings = await FirebaseService().fetchData();
+
+      // Sort the readings based on timestamp in ascending order
+      fetchedReadings.sort((a, b) => a.timeStamp.compareTo(b.timeStamp));
+
       setState(() {
-        readings = fetchedReadings;
+        readings = List.from(fetchedReadings);
       });
     } catch (e) {
       // Handle error
