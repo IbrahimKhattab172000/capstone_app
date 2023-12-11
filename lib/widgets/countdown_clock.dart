@@ -1,10 +1,77 @@
-// ignore_for_file: avoid_print
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 
-class CountDownWidget extends StatelessWidget {
-  const CountDownWidget({super.key});
+class CountDownWidget extends StatefulWidget {
+  const CountDownWidget({Key? key}) : super(key: key);
+
+  @override
+  _CountDownWidgetState createState() => _CountDownWidgetState();
+}
+
+class _CountDownWidgetState extends State<CountDownWidget> {
+  late Timer _resetTimer;
+  late int _endTime;
+
+  @override
+  void initState() {
+    super.initState();
+    // Set up the initial countdown timer
+    _setUpCountdown();
+  }
+
+  void _setUpCountdown() {
+    // Calculate the initial end time
+    setState(() {
+      _endTime = calculateEndTime();
+    });
+
+    // Set up a periodic timer to check the countdown
+    _resetTimer = Timer.periodic(const Duration(seconds: 1), _resetCountdown);
+  }
+
+  void _resetCountdown(Timer timer) {
+    // Check if the current time has passed the end time
+    if (DateTime.now().millisecondsSinceEpoch > _endTime) {
+      // Reset the countdown timer for the next day
+      _setUpCountdown();
+
+      // Show a customized dialog for 2 seconds
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.access_alarm,
+                  size: 50,
+                  color: Colors.blue,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Time to take your test!',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+
+      // Automatically close the dialog after 2 seconds
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.of(context).pop(); // Close the dialog
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _resetTimer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +94,14 @@ class CountDownWidget extends StatelessWidget {
 
             // Countdown timer
             CountdownTimer(
-              endTime: calculateEndTime(),
+              endTime: _endTime,
+              endWidget: const Text(
+                'Test now!',
+                style: TextStyle(fontSize: 16),
+              ),
               textStyle: const TextStyle(fontSize: 20, color: Colors.blue),
               onEnd: () {
-                // Add any action you want to perform when the countdown ends
-                print('Countdown ended!');
+                _setUpCountdown();
               },
             ),
           ],
@@ -39,19 +109,18 @@ class CountDownWidget extends StatelessWidget {
       ),
     );
   }
-}
 
-int calculateEndTime() {
-  DateTime now = DateTime.now();
-  DateTime testTime = DateTime(now.year, now.month, now.day, 8, 0, 0);
+  int calculateEndTime() {
+    DateTime now = DateTime.now();
 
-  // Adjust for Egyptian time (UTC+2)
-  testTime = testTime.add(const Duration(hours: 2));
+    // Set the test time at 8:00 am
+    DateTime testTime = DateTime(now.year, now.month, now.day, 8, 0, 0);
 
-  if (now.isAfter(testTime)) {
-    // If it's already past 8 am, set the countdown for the next day
-    testTime = testTime.add(const Duration(days: 1));
+    // If it's already past 8:00 am, set the countdown for the next day at 8:00 am
+    if (now.hour >= 8) {
+      testTime = DateTime(now.year, now.month, now.day + 1, 8, 0, 0);
+    }
+
+    return testTime.millisecondsSinceEpoch;
   }
-
-  return testTime.millisecondsSinceEpoch;
 }
