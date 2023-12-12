@@ -1,6 +1,5 @@
-// ignore_for_file: library_private_types_in_public_api, avoid_print
-
 import 'package:capstone_app/constants/constants.dart';
+import 'package:capstone_app/helpers/suggestion_helper.dart';
 import 'package:capstone_app/models/readings.dart';
 import 'package:capstone_app/services/firebase_service.dart';
 import 'package:capstone_app/widgets/add_test_button.dart';
@@ -52,7 +51,7 @@ class _HomeState extends State<Home> {
                       _buildDataCell(
                         readings.length > i
                             ? readings[readings.length - 1 - i]
-                                .flowRate
+                                .distance
                                 .toString()
                             : '',
                         highlight: i == 0,
@@ -71,14 +70,14 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 20.0),
             _buildSection(
-              'Instructions',
-              "Monitor regularly and check your heart rate and flow rate regularly\n \nResting heart rate and understand your baseline resting heart rate\n\nConsult a professional if you notice consistent irregularities or have concerns about your heart rate or flow rate, consult a healthcare professional for personalized advice",
+              title: 'Instructions',
+              content:
+                  "Monitor regularly and check your heart rate and flow rate regularly\n \nResting heart rate and understand your baseline resting heart rate\n\nConsult a professional if you notice consistent irregularities or have concerns about your heart rate or flow rate, consult a healthcare professional for personalized advice",
+              height: 180,
             ),
             const SizedBox(height: 10.0),
-            _buildSection(
-              'Suggestions',
-              "Stay hydrated and maintain good hydration levels to support healthy blood flow\n \nExercise regularly and engage in regular physical activity for a healthy heart.",
-            ),
+
+            _buildRecommendationWidget(), // Include the new widget
           ],
         ),
       ),
@@ -131,11 +130,14 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildSection(String title, String content) {
+  Widget _buildSection(
+      {required String title,
+      required String content,
+      required double height}) {
     return Container(
-      height: 180,
+      height: height,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -160,4 +162,67 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+  // New widget to display health recommendation
+  Widget _buildRecommendationWidget() {
+    if (readings.isNotEmpty) {
+      return HealthRecommendationWidget(
+        recommendation: SuggestionHelper.generateRecommendation(
+          distance: readings.first.distance,
+          heartRate: readings.first.heartRate,
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
 }
+
+// Add the missing HealthRecommendationWidget class here
+class HealthRecommendationWidget extends StatelessWidget {
+  final SuggestionData recommendation;
+
+  const HealthRecommendationWidget({Key? key, required this.recommendation})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text(
+            'Suggestions',
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 10.0),
+          if (recommendation.text.isNotEmpty)
+            Column(
+              children: [
+                Text(
+                  recommendation.text,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+                const SizedBox(height: 10.0),
+              ],
+            ),
+          if (recommendation.text.isEmpty)
+            const Text(
+              'No health recommendation available',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+//TODO: add listener for the Suggestion part so that once any update comes we see it right off the bat

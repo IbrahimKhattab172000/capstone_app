@@ -3,11 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Stream<List<Readings>> readingsStream() {
+    return _firestore.collection('readings').snapshots().map((snapshot) =>
+        snapshot.docs.map((doc) => Readings.fromMap(doc.data())).toList());
+  }
 
   Future<void> addData(Readings readings) async {
     await _firestore.collection('readings').add({
       'heartRate': readings.heartRate,
-      'flowRate': readings.flowRate,
+      'distance': readings.distance,
       'timeStamp': readings.timeStamp,
     });
   }
@@ -18,7 +22,7 @@ class FirebaseService {
     return querySnapshot.docs.map((DocumentSnapshot doc) {
       return Readings(
         heartRate: doc['heartRate'],
-        flowRate: doc['flowRate'],
+        distance: doc['distance'],
         timeStamp: doc['timeStamp'].toDate(),
       );
     }).toList();

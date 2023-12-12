@@ -36,7 +36,7 @@ class LineChart extends StatelessWidget {
               DateFormat('MM/dd HH:mm').format(readings.timeStamp.toLocal()),
           yValueMapper: (Readings readings, _) => title == 'Heart Rate'
               ? readings.heartRate.toDouble()
-              : readings.flowRate.toDouble(),
+              : readings.distance.toDouble(),
           dataLabelSettings: const DataLabelSettings(
             isVisible: true,
             textStyle:

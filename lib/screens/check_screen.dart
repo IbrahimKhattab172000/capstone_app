@@ -89,7 +89,7 @@ class _CheckState extends State<Check> {
                         DataRowWidget(
                           number: '${i + 1}⃣',
                           text:
-                              'Flow rate: ${_data[i].flowRate}   |   Heart rate: ${_data[i].heartRate}',
+                              'Flow rate: ${_data[i].distance}   |   Heart rate: ${_data[i].heartRate}',
                         ),
                     ],
                   ),

@@ -13,37 +13,38 @@ class Charts extends StatefulWidget {
 class _ChartsState extends State<Charts> {
   final FirebaseService _firebaseService = FirebaseService();
 
-  List<Readings> data = [];
-
-  @override
-  void initState() {
-    fetchData();
-    super.initState();
-  }
-
-  void fetchData() async {
-    List<Readings> fetchedData = await _firebaseService.fetchData();
-
-    setState(() {
-      data = fetchedData;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        LineChart(
-          title: 'Heart Rate',
-          data: data,
-          color: Colors.white,
-        ),
-        LineChart(
-          title: 'Flow Rate',
-          data: data,
-          color: Colors.white,
-        ),
-      ],
+    return StreamBuilder<List<Readings>>(
+      stream: _firebaseService.readingsStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        if (!snapshot.hasData) {
+          return const CircularProgressIndicator();
+        }
+
+        List<Readings> data = snapshot.data!;
+
+        print('Received Data: $data'); // Print received data for debugging.
+
+        return Column(
+          children: [
+            LineChart(
+              title: 'Heart Rate',
+              data: data,
+              color: Colors.white,
+            ),
+            LineChart(
+              title: 'Flow Rate',
+              data: data,
+              color: Colors.white,
+            ),
+          ],
+        );
+      },
     );
   }
 }
