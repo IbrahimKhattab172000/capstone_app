@@ -5,6 +5,7 @@ import 'package:capstone_app/models/readings.dart';
 import 'package:capstone_app/services/firebase_service.dart';
 import 'package:capstone_app/widgets/charts.dart';
 import 'package:capstone_app/widgets/countdown_clock.dart';
+import 'package:capstone_app/widgets/reading_widgets.dart';
 import 'package:flutter/material.dart';
 
 class Check extends StatefulWidget {
@@ -71,29 +72,7 @@ class _CheckState extends State<Check> {
             const Charts(),
             const SizedBox(height: 20.0),
 
-            _isLoading
-                ?
-                // Display a loading indicator
-                const Column(
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 10.0), // Add spacing if needed
-                      Text('Loading...'),
-                    ],
-                  )
-                :
-                // Display the data when it's available
-                Column(
-                    children: [
-                      for (int i = 0; i < _data.length; i++)
-                        DataRowWidget(
-                          number: '${i + 1}⃣',
-                          text:
-                              'Flow rate: ${_data[i].distance}   |   Heart rate: ${_data[i].heartRate}',
-                        ),
-                    ],
-                  ),
-
+            const ReadingWidgets(),
             const SizedBox(height: 20.0),
           ],
         ),
