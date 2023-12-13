@@ -1,51 +1,13 @@
 // ignore_for_file: avoid_print
 
 import 'package:capstone_app/constants/constants.dart';
-import 'package:capstone_app/models/readings.dart';
-import 'package:capstone_app/services/firebase_service.dart';
 import 'package:capstone_app/widgets/charts.dart';
 import 'package:capstone_app/widgets/countdown_clock.dart';
 import 'package:capstone_app/widgets/reading_widgets.dart';
 import 'package:flutter/material.dart';
 
-class Check extends StatefulWidget {
+class Check extends StatelessWidget {
   const Check({super.key});
-
-  @override
-  State<Check> createState() => _CheckState();
-}
-
-class _CheckState extends State<Check> {
-  final FirebaseService _firebaseService = FirebaseService();
-
-  List<Readings> _data = [];
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchAndFilterThenGetTheLatest3Readings();
-  }
-
-  fetchAndFilterThenGetTheLatest3Readings() async {
-    try {
-      List<Readings> data = await _firebaseService.fetchData();
-
-      // Sort the data by timestamp in descending order
-      data.sort((a, b) => b.timeStamp.compareTo(a.timeStamp));
-
-      // Take the first 3 elements (latest 3 readings)
-      _data = data.take(3).toList();
-    } catch (e) {
-      // Handle errors gracefully
-      print('Error fetching data: $e');
-    } finally {
-      // Set isLoading to false when the fetch operation is completed
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

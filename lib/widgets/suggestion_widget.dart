@@ -33,7 +33,7 @@ class _SuggestionsState extends State<Suggestions> {
 
           List<Readings> data = snapshot.data!;
 //We should always give suggestions depending on the latest distance
-          Readings latestReading = data.last;
+          Readings latestReading = data.first;
           return SuggestionWidget(
             recommendation: SuggestionHelper.generateSuggestion(
               distance: latestReading.distance,
