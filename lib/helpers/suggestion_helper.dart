@@ -1,7 +1,7 @@
 class SuggestionHelper {
-  static SuggestionData generateRecommendation({
+  static SuggestionData generateSuggestion({
     required int distance,
-    required int heartRate,
+    // required int heartRate,
   }) {
     // Distance logic
     if (distance < 5) {
